@@ -1,0 +1,29 @@
+body{
+    background: url(https://wallpapercave.com/wp/wp10261833.jpg) top / cover;
+}
+.wrapper{
+    max-width: 800px;
+    margin: 0 auto;
+}
+.box{
+    @include absmiddle;
+    width: 500px;
+    text-align: center;
+    border: 3mm ridge navy;
+    border-radius: 15px;
+    background-color: darkslateblue;
+}
+input, button{
+    border-radius: 5px;
+    border: 2px solid navy;
+}
+button{
+    margin: 15px 0;
+}
+.start{
+    display: none;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+}
