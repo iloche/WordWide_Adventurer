@@ -1,6 +1,6 @@
 // 🍄⭐🍄⭐🍄⭐🍄⭐🍄⭐🍄⭐🍄⭐🍄⭐🍄⭐🍄⭐🍄⭐🍄⭐🍄⭐🍄⭐🍄⭐
 
-// ⭐ // // // // // // // Début de l'exercice // // // // // // // // // /🍄
+// ⭐ // // // // //  Déclaration de variables // // // // // // // // // /🍄
 
 // 🍄⭐🍄⭐🍄⭐🍄⭐🍄⭐🍄⭐🍄⭐🍄⭐🍄⭐🍄⭐🍄⭐🍄⭐🍄⭐🍄⭐🍄⭐
 
@@ -31,6 +31,12 @@ if (localStorage.getItem("original") && localStorage.getItem("traduction")) {
     traduction.value = localStorage.getItem("traduction");
 }
 
+// 🎀⭐🎀⭐🎀⭐🎀⭐🎀⭐🎀⭐🎀⭐🎀⭐🎀⭐🎀⭐🎀⭐🎀⭐🎀⭐🎀⭐🎀⭐🎀 
+
+// ⭐ // // // // // // // // Fonctions // // // // // // // // // // // // ⭐
+
+// 🎀⭐🎀⭐🎀⭐🎀⭐🎀⭐🎀⭐🎀⭐🎀⭐🎀⭐🎀⭐🎀⭐🎀⭐🎀⭐🎀⭐🎀⭐🎀 
+
 function displayWord() {
     // Vérifier si les champs ne sont pas vides
     if (original.value !== "" && traduction.value !== "") {
@@ -43,23 +49,6 @@ function displayWord() {
         // Définir l'attribut data-index sur l'élément li pour stocker son index dans la liste 'words'
         newListItem.dataset.index = words.length;
 
-        // Ajout d'un gestionnaire d'événements au bouton "❌" pour supprimer le parent li lorsqu'il est cliqué
-        newListItem.querySelector('.remove').addEventListener('click', function() {
-            // Récupérer l'index du mot dans la liste
-            const index = this.parentElement.dataset.index;
-            // Supprimer le parent li de la liste affichée
-            this.parentElement.remove();
-            // Supprimer le mot correspondant de la liste 'words'
-            if (index !== undefined) {
-                words.splice(index, 1);
-                // Mettre à jour le stockage local
-                localStorage.setItem("words", JSON.stringify(words));
-                // Mettre à jour le compteur de mots
-                nbr--;
-                count.innerHTML = `Il y a ${nbr} mot(s) enregistré(s)`;
-            }
-        });
-
         console.log(words);
 
         // Ajout de l'élément li à la liste des mots
@@ -69,7 +58,12 @@ function displayWord() {
         localStorage.setItem("traduction", traduction.value);
 
         // Ajouter le mot à la liste
-        words.push({ original: original.value, traduction: traduction.value })
+        words.push(
+            { 
+            original: original.value,
+            traduction: traduction.value 
+            }
+        )
         localStorage.setItem("words", JSON.stringify(words));
 
         // Réinitialisation des valeurs du formulaire
@@ -83,6 +77,22 @@ function displayWord() {
     }
 }
 
+// Fonction pour sélectionner un mot aléatoire
+function selectRandomWord() {
+    if (words.length > 0) {
+        randomWord = Math.floor(Math.random() * words.length);
+        translate.innerHTML = `Traduis le mot <span>${words[randomWord].original}</span>`;
+    } else {
+        translate.innerHTML = "Aucun mot à traduire disponible.";
+    }
+}
+
+// 🏵️⭐🏵️⭐🏵️⭐🏵️⭐🏵️⭐🏵️⭐🏵️⭐🏵️⭐🏵️⭐🏵️⭐🏵️⭐🏵️⭐🏵️⭐🏵️⭐🏵️  
+
+// ⭐ // // // // // // // Évenements // // // // // // // // // // // //⭐
+
+// 🏵️⭐🏵️⭐🏵️⭐🏵️⭐🏵️⭐🏵️⭐🏵️⭐🏵️⭐🏵️⭐🏵️⭐🏵️⭐🏵️⭐🏵️⭐🏵️⭐🏵️ 
+
 // Événement sur le bouton "Envoyer"
 send.addEventListener("click", function(){
     displayWord();
@@ -95,19 +105,9 @@ clear.addEventListener("click", function(){
     original.value = "";
     traduction.value = "";
     nbr = 0; 
-    count.innerHTML = `Il y a 0 mot(s) enregistré(s)`;
+    count.innerHTML = `Il y a ${nbr} mot(s) enregistré(s)`;
     ready.style.display = "none";
 });
-
-// Fonction pour sélectionner un mot aléatoire
-function selectRandomWord() {
-    if (words.length > 0) {
-        randomWord = Math.floor(Math.random() * words.length);
-        translate.innerHTML = `Traduis le mot <span>${words[randomWord].original}</span>`;
-    } else {
-        translate.innerHTML = "Aucun mot à traduire disponible.";
-    }
-}
 
 // Événement sur le bouton "Teste tes connaissances"
 ready.addEventListener("click", function(){
@@ -121,6 +121,30 @@ close.addEventListener("click", function(){
     scoreNbr = 0;
     score.textContent = `Tu as ${scoreNbr} bonne(s) réponse(s)`
 })
+// Événement sur le bouton "❌" pour supprimer un mot de la liste
+wordsList.addEventListener("click", function(event) {
+    if (event.target.classList.contains("remove")) {
+        // Récupérer l'index du mot dans la liste
+        const index = event.target.parentElement.dataset.index;
+        // Supprimer le parent li de la liste affichée
+        event.target.parentElement.remove();
+        // Supprimer le mot correspondant du tableau 'words'
+        if (index !== undefined) {
+            words.splice(index, 1);
+            // Mettre à jour les attributs data-index des éléments restants dans la liste
+            const listItems = wordsList.querySelectorAll("li");
+            listItems.forEach((item, i) => {
+                item.dataset.index = i;
+            });
+            // Mettre à jour le stockage local
+            localStorage.setItem("words", JSON.stringify(words));
+            // Mettre à jour le compteur de mots
+            nbr--;
+            count.innerHTML = `Il y a ${nbr} mot(s) enregistré(s)`;
+        }
+    }
+    console.log(words);
+});
 
 // Événement sur le bouton "Proposer"
 check.addEventListener("click", function(){
@@ -148,9 +172,6 @@ check.addEventListener("click", function(){
     userPropose.value = "";
 }); 
 
-// Chargement initial de la page : sélectionne un mot aléatoire
-selectRandomWord();
-
 // Événement de validation à la touche "Enter"
 traduction.addEventListener("keyup", function(event){
     if(event.key === "Enter"){
@@ -163,3 +184,6 @@ userPropose.addEventListener("keyup", function(event){
         check.click()
     }
 })
+
+// Chargement initial de la page : sélectionne un mot aléatoire
+selectRandomWord();

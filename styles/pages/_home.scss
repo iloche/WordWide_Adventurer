@@ -20,6 +20,9 @@ h2{
     display: flex;
     margin-left: 20%;
 }
+.count{
+    margin-top: 20px;
+}
 input, button{
     border-radius: 5px;
     border: 2px solid navy;
@@ -33,6 +36,9 @@ button{
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%); 
+}
+.words-list{
+    margin: 15px;
 }
 .game{
     position: absolute;
