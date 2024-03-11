@@ -12,7 +12,14 @@
             <h1>WordWide Adventurer</h1>
             <p>L'application qui t'aventure dans les mots du monde entier</p>
             <div class="content-box">
-                <h2>Ajoutez des mots</h2>
+                <div class="languages">
+                    <h2>Ajoutez des mots en :</h2>
+                    <select id="languageSelect">
+                        <option value="en">Anglais</option>
+                        <option value="nl">Néerlandais</option>
+                        <option value="tr">Turc</option>
+                    </select>
+                </div>
                 <div class="origin">
                     <p>Mot original</p>
                     <input type="text" placeholder="Entrez le mot original" class="original">
@@ -27,6 +34,7 @@
                     <button class="clear">Effacer la liste en cours</button>
                 </div>
                 <button class="ready">Teste tes connaissances</button>
+                <div class="words-list"></div>
             </div>
         </div>
         <div class="game">

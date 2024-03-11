@@ -13,6 +13,13 @@ body{
     border-radius: 15px;
     background-color: darkslateblue;
 }
+h2{
+    margin: 0;
+}
+.languages{
+    display: flex;
+    margin-left: 20%;
+}
 input, button{
     border-radius: 5px;
     border: 2px solid navy;
@@ -55,4 +62,10 @@ button{
 }
 span{
     color: pink;
+}
+.remove{
+    cursor: pointer;
+}
+li{
+    list-style-type: none;
 }

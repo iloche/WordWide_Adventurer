@@ -15,6 +15,7 @@ let original = document.querySelector(".original"),
     send = document.querySelector(".send"),
     clear = document.querySelector(".clear"),
     ready = document.querySelector(".ready"),
+    wordsList = document.querySelector(".words-list"),
     game = document.querySelector(".game"),
     close = document.querySelector(".close"),
     translate = document.querySelector(".translateSentence"),
@@ -33,9 +34,36 @@ if (localStorage.getItem("original") && localStorage.getItem("traduction")) {
 function displayWord() {
     // Vérifier si les champs ne sont pas vides
     if (original.value !== "" && traduction.value !== "") {
-        // Injection du contenu en HTML
+        // Création d'un nouvel élément li
+        const newListItem = document.createElement('li');
+
+        // Ajout du contenu HTML à l'élément li
+        newListItem.innerHTML = `<strong>Original:</strong> ${original.value} - <strong>Traduction:</strong> ${traduction.value} <span class="remove">❌</span>`;
+
+        // Définir l'attribut data-index sur l'élément li pour stocker son index dans la liste 'words'
+        newListItem.dataset.index = words.length;
+
+        // Ajout d'un gestionnaire d'événements au bouton "❌" pour supprimer le parent li lorsqu'il est cliqué
+        newListItem.querySelector('.remove').addEventListener('click', function() {
+            // Récupérer l'index du mot dans la liste
+            const index = this.parentElement.dataset.index;
+            // Supprimer le parent li de la liste affichée
+            this.parentElement.remove();
+            // Supprimer le mot correspondant de la liste 'words'
+            if (index !== undefined) {
+                words.splice(index, 1);
+                // Mettre à jour le stockage local
+                localStorage.setItem("words", JSON.stringify(words));
+                // Mettre à jour le compteur de mots
+                nbr--;
+                count.innerHTML = `Il y a ${nbr} mot(s) enregistré(s)`;
+            }
+        });
+
         console.log(words);
-        
+
+        // Ajout de l'élément li à la liste des mots
+        wordsList.appendChild(newListItem);
         // Enregistrement des données dans le local storage
         localStorage.setItem("original", original.value);
         localStorage.setItem("traduction", traduction.value);
@@ -90,6 +118,8 @@ ready.addEventListener("click", function(){
 // Événement sur le bouton "❌"
 close.addEventListener("click", function(){
     game.classList.remove("active")
+    scoreNbr = 0;
+    score.textContent = `Tu as ${scoreNbr} bonne(s) réponse(s)`
 })
 
 // Événement sur le bouton "Proposer"
@@ -97,8 +127,18 @@ check.addEventListener("click", function(){
     if (userPropose.value.toUpperCase() == words[randomWord].traduction.toUpperCase()){
         result.innerHTML = `Bien joué !`;
         scoreNbr++;
-        score.textContent = `Tu as ${scoreNbr} bonne(s) réponse(s)`
-        selectRandomWord()
+        score.textContent = `Tu as ${scoreNbr} bonne(s) réponse(s)`;
+
+        // Supprimer le mot de la liste
+        words.splice(randomWord, 1);
+        localStorage.setItem("words", JSON.stringify(words));
+
+        // Sélectionner un nouveau mot aléatoire si la liste n'est pas vide
+        if (words.length > 0) {
+            selectRandomWord();
+        } else {
+            translate.innerHTML = "Aucun mot à traduire disponible";
+        }
     } else {
         result.innerHTML = `Mauvaise réponse..`;
     }
