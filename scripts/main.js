@@ -25,6 +25,10 @@ let original = document.querySelector(".original"),
     score = document.querySelector(".score"),
     scoreNbr = 0;
 
+// let en = [],
+//     nl = [],
+//     tr = []
+
 // Remplir le formulaire avec les données du local storage s'il y en a
 if (localStorage.getItem("original") && localStorage.getItem("traduction")) {
     original.value = localStorage.getItem("original");
@@ -40,19 +44,18 @@ if (localStorage.getItem("original") && localStorage.getItem("traduction")) {
 function displayWord() {
     // Vérifier si les champs ne sont pas vides
     if (original.value !== "" && traduction.value !== "") {
-        // Création d'un nouvel élément li
-        const newListItem = document.createElement('li');
+        // Construction du HTML de l'élément li à ajouter
+        const newListItem = 
+        `<li data-index="${words.length}">
+        <strong>Original:</strong> ${original.value} - <strong>Traduction:</strong> ${traduction.value} 
+        <span class="remove">❌</span>
+        </li>`;
 
-        // Ajout du contenu HTML à l'élément li
-        newListItem.innerHTML = `<strong>Original:</strong> ${original.value} - <strong>Traduction:</strong> ${traduction.value} <span class="remove">❌</span>`;
-
-        // Définir l'attribut data-index sur l'élément li pour stocker son index dans la liste 'words'
-        newListItem.dataset.index = words.length;
+        // Ajout de l'élément li à la liste des mots en injectant dans innerHTML
+        wordsList.innerHTML += newListItem;
 
         console.log(words);
 
-        // Ajout de l'élément li à la liste des mots
-        wordsList.appendChild(newListItem);
         // Enregistrement des données dans le local storage
         localStorage.setItem("original", original.value);
         localStorage.setItem("traduction", traduction.value);
@@ -121,19 +124,20 @@ close.addEventListener("click", function(){
     scoreNbr = 0;
     score.textContent = `Tu as ${scoreNbr} bonne(s) réponse(s)`
 })
+
 // Événement sur le bouton "❌" pour supprimer un mot de la liste
 wordsList.addEventListener("click", function(event) {
     if (event.target.classList.contains("remove")) {
-        // Récupérer l'index du mot dans la liste
+        // Définir la const pour récupérer l'index du mot dans la liste
         const index = event.target.parentElement.dataset.index;
-        // Supprimer le parent li de la liste affichée
+        // Supprimer le parent li de l'élément cliqué
         event.target.parentElement.remove();
         // Supprimer le mot correspondant du tableau 'words'
-        if (index !== undefined) {
-            words.splice(index, 1);
+        if (index !== undefined) { // les valeurs sont différentes et les types de données sont différents 
+            words.splice(index, 1); // (Enlève la ligne correspondante à l'index, nombre d'éléments enlevés à partir de cet index)
             // Mettre à jour les attributs data-index des éléments restants dans la liste
-            const listItems = wordsList.querySelectorAll("li");
-            listItems.forEach((item, i) => {
+            const listItems = wordsList.querySelectorAll("li"); // Chercher tous les li de mon ul
+            listItems.forEach((item, i) => { //listItems tous mes Li, et item mon li tout seul, i = index
                 item.dataset.index = i;
             });
             // Mettre à jour le stockage local
